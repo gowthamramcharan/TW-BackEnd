@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <form action="" onsubmit="senddata(event)"  method="post">
+     <h3>Enter the type of problem</h3>
+    <input type="text" name="type" > <br>
+    <h3>Enter your Remarks</h3>
+    <textarea name="explanation" ></textarea> <br>
+    <button type="submit">Submit the issue</button>
+   </form>
+   <script>
+
+    function senddata(ev){
+        ev.preventDefault();
+        console.log(ev.target[0].value)
+        var obj={
+            "issue": ev.target[0].value,
+            "remarks":ev.target[1].value
+        }
+        console.log(obj)
+        fetch("http://localhost:3300/database",{
+            method:"POST",
+             headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(obj)
+            })
+            .then(res=>{console.log("ayipoindi")})
+            // .then(data=>{console.log(data)})
+        }
+   </script>
+</body>
+</html>

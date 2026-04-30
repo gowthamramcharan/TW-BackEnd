@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Todolist</h1>
+    <form onsubmit="addTodo(event)" method="post">
+        <input type="text" id="t1">
+    <button type="submit" id="addbtn">Add</button> 
+    </form>
+    <ul id="d1">
+
+    </ul>
+    <script>
+        function genTodoUI(){
+            fetch("http://localhost:3300/todolist")
+            .then(res=>res.json())
+            .then((data)=>{genui(data)})
+        }
+        genTodoUI()
+        function addTodo(ev){
+            ev.preventDefault();
+            
+            var data=document.getElementById("t1").value
+            var obj={"todo":data}
+            fetch("http://localhost:3300/todolist",{
+                method:'POST',
+                headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(obj)
+         })
+        .then(res=>res.json())
+        .then((data)=>{
+            genui(data)
+            console.log("hello")
+        })
+            }
+   
+
+        function genui(todos){
+            document.getElementById("d1").innerText = ""
+            // console.log(todos,"ytdh")
+            todos.forEach((todo,index)=>{
+            var ntd=document.createElement("li")
+            var delbtn=document.createElement("button")
+            var obj={
+                "index":index
+            }
+            delbtn.innerText="DELETE"
+            delbtn.addEventListener("click",function(){
+                console.log("deleted")
+                fetch("http://localhost:3300/todolist",{
+                    method:'DELETE',
+                headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(obj)
+         })
+        .then(res=>res.json())
+        .then((data)=>{
+            genui(data)
+            console.log("hello")
+                })
+
+            })
+            ntd.innerHTML=todo;
+            ntd.appendChild(delbtn)
+            document.getElementById("d1").appendChild(ntd)
+            })
+
+        }
+       
+       
+    </script>
+</body>
+</html>
